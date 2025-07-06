@@ -6,4 +6,9 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\GerenciadorData\Gerenciador.Data.csproj" />
+    <ProjectReference Include="..\GerenciadorModel\Gerenciador.Model.csproj" />
+  </ItemGroup>
+
 </Project>

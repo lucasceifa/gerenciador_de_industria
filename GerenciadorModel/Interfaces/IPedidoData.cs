@@ -7,5 +7,6 @@
         Task CreateAsync(Pedido pedido);
         Task UpdateAsync(Pedido pedido);
         Task DeleteAsync(Guid id);
+        Task<bool> TemPedidosDoCompradorAsync(Guid compradorId);
     }
 }

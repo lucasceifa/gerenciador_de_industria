@@ -3,6 +3,10 @@
   "WorkspaceRootPath": "C:\\Users\\LUCAS\\Desktop\\MinervaFoods\\gerenciador_de_industria\\GerenciadorBackend\\",
   "Documents": [
     {
+      "AbsoluteMoniker": "D:0:0:{4DB982F9-42CD-4264-ACFC-01251312B3DC}|GerenciadorBackend.csproj|c:\\users\\lucas\\desktop\\minervafoods\\gerenciador_de_industria\\gerenciadorbackend\\scripts\\tables.sql||{CC5D8DF0-88F4-4BB2-9DBB-B48CEE65C30A}",
+      "RelativeMoniker": "D:0:0:{4DB982F9-42CD-4264-ACFC-01251312B3DC}|GerenciadorBackend.csproj|solutionrelative:scripts\\tables.sql||{CC5D8DF0-88F4-4BB2-9DBB-B48CEE65C30A}"
+    },
+    {
       "AbsoluteMoniker": "D:0:0:{4DB982F9-42CD-4264-ACFC-01251312B3DC}|Gerenciador.API.csproj|c:\\users\\lucas\\desktop\\minervafoods\\gerenciador_de_industria\\gerenciadorbackend\\appsettings.development.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
       "RelativeMoniker": "D:0:0:{4DB982F9-42CD-4264-ACFC-01251312B3DC}|Gerenciador.API.csproj|solutionrelative:appsettings.development.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
     },
@@ -53,10 +57,6 @@
       "AbsoluteMoniker": "D:0:0:{377423D6-B678-4598-A7F4-1500187259DB}|..\\GerenciadorService\\Gerenciador.Service.csproj|c:\\users\\lucas\\desktop\\minervafoods\\gerenciador_de_industria\\gerenciadorservice\\gerenciador.service.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{4DB982F9-42CD-4264-ACFC-01251312B3DC}|GerenciadorBackend.csproj|c:\\users\\lucas\\desktop\\minervafoods\\gerenciador_de_industria\\gerenciadorbackend\\scripts\\tables.sql||{CC5D8DF0-88F4-4BB2-9DBB-B48CEE65C30A}",
-      "RelativeMoniker": "D:0:0:{4DB982F9-42CD-4264-ACFC-01251312B3DC}|GerenciadorBackend.csproj|solutionrelative:scripts\\tables.sql||{CC5D8DF0-88F4-4BB2-9DBB-B48CEE65C30A}"
-    },
-    {
       "AbsoluteMoniker": "D:0:0:{4DB982F9-42CD-4264-ACFC-01251312B3DC}|GerenciadorBackend.csproj|c:\\users\\lucas\\desktop\\minervafoods\\gerenciador_de_industria\\gerenciadorbackend\\scripts\\tables_data.sql||{CC5D8DF0-88F4-4BB2-9DBB-B48CEE65C30A}",
       "RelativeMoniker": "D:0:0:{4DB982F9-42CD-4264-ACFC-01251312B3DC}|GerenciadorBackend.csproj|solutionrelative:scripts\\tables_data.sql||{CC5D8DF0-88F4-4BB2-9DBB-B48CEE65C30A}"
     },
@@ -92,7 +92,7 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 1,
+          "SelectedChildIndex": 10,
           "Children": [
             {
               "$type": "Bookmark",
@@ -100,7 +100,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 0,
+              "DocumentIndex": 1,
               "Title": "appsettings.Development.json",
               "DocumentMoniker": "C:\\Users\\LUCAS\\Desktop\\MinervaFoods\\gerenciador_de_industria\\GerenciadorBackend\\appsettings.Development.json",
               "RelativeDocumentMoniker": "appsettings.Development.json",
@@ -113,20 +113,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 6,
-              "Title": "ItemPedidoData.cs",
-              "DocumentMoniker": "C:\\Users\\LUCAS\\Desktop\\MinervaFoods\\gerenciador_de_industria\\GerenciadorData\\ItemPedidoData.cs",
-              "RelativeDocumentMoniker": "..\\GerenciadorData\\ItemPedidoData.cs",
-              "ToolTip": "C:\\Users\\LUCAS\\Desktop\\MinervaFoods\\gerenciador_de_industria\\GerenciadorData\\ItemPedidoData.cs",
-              "RelativeToolTip": "..\\GerenciadorData\\ItemPedidoData.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAgAAAABAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-07-06T19:46:41.895Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 7,
+              "DocumentIndex": 8,
               "Title": "IItemPedidoData.cs",
               "DocumentMoniker": "C:\\Users\\LUCAS\\Desktop\\MinervaFoods\\gerenciador_de_industria\\GerenciadorModel\\Interfaces\\IItemPedidoData.cs",
               "RelativeDocumentMoniker": "..\\GerenciadorModel\\Interfaces\\IItemPedidoData.cs",
@@ -139,7 +126,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 8,
+              "DocumentIndex": 9,
               "Title": "PedidoData.cs",
               "DocumentMoniker": "C:\\Users\\LUCAS\\Desktop\\MinervaFoods\\gerenciador_de_industria\\GerenciadorData\\PedidoData.cs",
               "RelativeDocumentMoniker": "..\\GerenciadorData\\PedidoData.cs",
@@ -152,7 +139,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 5,
+              "DocumentIndex": 6,
               "Title": "CompradorData.cs",
               "DocumentMoniker": "C:\\Users\\LUCAS\\Desktop\\MinervaFoods\\gerenciador_de_industria\\GerenciadorData\\CompradorData.cs",
               "RelativeDocumentMoniker": "..\\GerenciadorData\\CompradorData.cs",
@@ -165,7 +152,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 9,
+              "DocumentIndex": 10,
               "Title": "IPedidoData.cs",
               "DocumentMoniker": "C:\\Users\\LUCAS\\Desktop\\MinervaFoods\\gerenciador_de_industria\\GerenciadorModel\\Interfaces\\IPedidoData.cs",
               "RelativeDocumentMoniker": "..\\GerenciadorModel\\Interfaces\\IPedidoData.cs",
@@ -178,7 +165,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 10,
+              "DocumentIndex": 11,
               "Title": "ICompradorData.cs",
               "DocumentMoniker": "C:\\Users\\LUCAS\\Desktop\\MinervaFoods\\gerenciador_de_industria\\GerenciadorModel\\Interfaces\\ICompradorData.cs",
               "RelativeDocumentMoniker": "..\\GerenciadorModel\\Interfaces\\ICompradorData.cs",
@@ -191,7 +178,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 2,
               "Title": "Program.cs",
               "DocumentMoniker": "C:\\Users\\LUCAS\\Desktop\\MinervaFoods\\gerenciador_de_industria\\GerenciadorBackend\\Program.cs",
               "RelativeDocumentMoniker": "Program.cs",
@@ -204,7 +191,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 3,
+              "DocumentIndex": 4,
               "Title": "Carne.cs",
               "DocumentMoniker": "C:\\Users\\LUCAS\\Desktop\\MinervaFoods\\gerenciador_de_industria\\GerenciadorModel\\Carne.cs",
               "RelativeDocumentMoniker": "..\\GerenciadorModel\\Carne.cs",
@@ -217,7 +204,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 4,
+              "DocumentIndex": 5,
               "Title": "Entidade.cs",
               "DocumentMoniker": "C:\\Users\\LUCAS\\Desktop\\MinervaFoods\\gerenciador_de_industria\\GerenciadorModel\\Entidade.cs",
               "RelativeDocumentMoniker": "..\\GerenciadorModel\\Entidade.cs",
@@ -230,7 +217,32 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 2,
+              "DocumentIndex": 0,
+              "Title": "tables.sql ",
+              "DocumentMoniker": "C:\\Users\\LUCAS\\Desktop\\MinervaFoods\\gerenciador_de_industria\\GerenciadorBackend\\Scripts\\tables.sql",
+              "RelativeDocumentMoniker": "Scripts\\tables.sql",
+              "ToolTip": "C:\\Users\\LUCAS\\Desktop\\MinervaFoods\\gerenciador_de_industria\\GerenciadorBackend\\Scripts\\tables.sql",
+              "RelativeToolTip": "Scripts\\tables.sql",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000826|",
+              "WhenOpened": "2025-07-06T19:01:14.741Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 7,
+              "Title": "ItemPedidoData.cs",
+              "DocumentMoniker": "C:\\Users\\LUCAS\\Desktop\\MinervaFoods\\gerenciador_de_industria\\GerenciadorData\\ItemPedidoData.cs",
+              "RelativeDocumentMoniker": "..\\GerenciadorData\\ItemPedidoData.cs",
+              "ToolTip": "C:\\Users\\LUCAS\\Desktop\\MinervaFoods\\gerenciador_de_industria\\GerenciadorData\\ItemPedidoData.cs",
+              "RelativeToolTip": "..\\GerenciadorData\\ItemPedidoData.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAgAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-07-06T19:46:41.895Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
               "Title": "CarneData.cs",
               "DocumentMoniker": "C:\\Users\\LUCAS\\Desktop\\MinervaFoods\\gerenciador_de_industria\\GerenciadorData\\CarneData.cs",
               "RelativeDocumentMoniker": "..\\GerenciadorData\\CarneData.cs",
@@ -243,7 +255,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 11,
+              "DocumentIndex": 12,
               "Title": "ICarneData.cs",
               "DocumentMoniker": "C:\\Users\\LUCAS\\Desktop\\MinervaFoods\\gerenciador_de_industria\\GerenciadorModel\\Interfaces\\ICarneData.cs",
               "RelativeDocumentMoniker": "..\\GerenciadorModel\\Interfaces\\ICarneData.cs",
@@ -252,18 +264,6 @@
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAA4AAAAiAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-07-06T19:32:35.746Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 16,
-              "Title": "tables.sql ",
-              "DocumentMoniker": "C:\\Users\\LUCAS\\Desktop\\MinervaFoods\\gerenciador_de_industria\\GerenciadorBackend\\Scripts\\tables.sql",
-              "RelativeDocumentMoniker": "Scripts\\tables.sql",
-              "ToolTip": "C:\\Users\\LUCAS\\Desktop\\MinervaFoods\\gerenciador_de_industria\\GerenciadorBackend\\Scripts\\tables.sql",
-              "RelativeToolTip": "Scripts\\tables.sql",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000826|",
-              "WhenOpened": "2025-07-06T19:01:14.741Z",
               "EditorCaption": ""
             },
             {
@@ -293,7 +293,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 15,
+              "DocumentIndex": 16,
               "Title": "Gerenciador.Service.csproj",
               "DocumentMoniker": "C:\\Users\\LUCAS\\Desktop\\MinervaFoods\\gerenciador_de_industria\\GerenciadorService\\Gerenciador.Service.csproj",
               "RelativeDocumentMoniker": "..\\GerenciadorService\\Gerenciador.Service.csproj",
@@ -306,7 +306,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 14,
+              "DocumentIndex": 15,
               "Title": "ItemPedido.cs",
               "DocumentMoniker": "C:\\Users\\LUCAS\\Desktop\\MinervaFoods\\gerenciador_de_industria\\GerenciadorModel\\ItemPedido.cs",
               "RelativeDocumentMoniker": "..\\GerenciadorModel\\ItemPedido.cs",
@@ -319,7 +319,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 13,
+              "DocumentIndex": 14,
               "Title": "Pedido.cs",
               "DocumentMoniker": "C:\\Users\\LUCAS\\Desktop\\MinervaFoods\\gerenciador_de_industria\\GerenciadorModel\\Pedido.cs",
               "RelativeDocumentMoniker": "..\\GerenciadorModel\\Pedido.cs",
@@ -332,7 +332,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 12,
+              "DocumentIndex": 13,
               "Title": "IMoeda.cs",
               "DocumentMoniker": "C:\\Users\\LUCAS\\Desktop\\MinervaFoods\\gerenciador_de_industria\\GerenciadorModel\\Enums\\IMoeda.cs",
               "RelativeDocumentMoniker": "..\\GerenciadorModel\\Enums\\IMoeda.cs",

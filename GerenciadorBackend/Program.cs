@@ -1,7 +1,9 @@
+using CarneComprador.Service;
 using Dapper;
 using GerenciadorData;
 using GerenciadorModel;
 using GerenciadorModel.Interfaces;
+using GerenciadorService;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 
@@ -31,12 +33,15 @@ builder.Services.AddCors(options =>
 
 // Declarando dependências da entidade Carne no projeto
 builder.Services.AddTransient<ICarneData, CarneData>();
+builder.Services.AddTransient<CarneService, CarneService>();
 
 // Declarando dependências da entidade Comprador no projeto
 builder.Services.AddTransient<ICompradorData, CompradorData>();
+builder.Services.AddTransient<CompradorService, CompradorService>();
 
 // Declarando dependências da entidade Pedido no projeto
 builder.Services.AddTransient<IPedidoData, PedidoData>();
+builder.Services.AddTransient<PedidoService, PedidoService>();
 
 // Declarando dependências da entidade ItemPedido no projeto
 builder.Services.AddTransient<IItemPedidoData, ItemPedidoData>();

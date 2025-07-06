@@ -62,5 +62,14 @@ namespace GerenciadorData
             await connection.ExecuteAsync(queryItens, new { Id = id });
             await connection.ExecuteAsync(queryPedido, new { Id = id });
         }
+
+        public async Task<bool> TemPedidosDoCompradorAsync(Guid compradorId)
+        {
+            var query = "SELECT COUNT(1) FROM Pedido WHERE CompradorId = @CompradorId";
+            var connection = CreateConnection();
+            var count = await connection.ExecuteScalarAsync<int>(query, new { CompradorId = compradorId });
+            return count > 0;
+        }
+
     }
 }
