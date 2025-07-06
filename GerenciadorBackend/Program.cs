@@ -6,6 +6,7 @@ using GerenciadorModel.Interfaces;
 using GerenciadorService;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
+using System.Diagnostics;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -47,6 +48,31 @@ builder.Services.AddTransient<PedidoService, PedidoService>();
 builder.Services.AddTransient<IItemPedidoData, ItemPedidoData>();
 
 var app = builder.Build();
+
+var testProjectPath = Path.Combine(Directory.GetCurrentDirectory(), "..", "Gerenciador.Testes", "Gerenciador.Testes.csproj");
+
+var testProcess = new Process
+{
+    StartInfo = new ProcessStartInfo
+    {
+        FileName = "dotnet",
+        Arguments = $"test \"{testProjectPath}\"",
+        RedirectStandardOutput = true,
+        RedirectStandardError = true,
+        UseShellExecute = false,
+        CreateNoWindow = true
+    }
+};
+
+testProcess.Start();
+string output = await testProcess.StandardOutput.ReadToEndAsync();
+string error = await testProcess.StandardError.ReadToEndAsync();
+testProcess.WaitForExit();
+
+if (testProcess.ExitCode != 0)
+{
+    throw new Exception($"Falha ao rodar testes unitários:\n{output}\n{error}");
+}
 
 #region Criando as tabelas e preenchendo elas com alguns dados
 using (var scope = app.Services.CreateScope())
