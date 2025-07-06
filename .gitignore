@@ -93,3 +93,18 @@ _ReSharper*/
 
 # Ignore any local .env or config overrides
 *.local
+
+# Arquivos de cache do Visual Studio
+.vs/
+**/.vs/
+.vscode/
+
+# Layouts e cache de documentos
+**/GerenciadorBackend/v*/DocumentLayout*.json
+**/GerenciadorBackend/v*/.futdcache.v2
+
+# Metadados de avaliação de projeto
+**/ProjectEvaluation/
+*.metadata.*
+*.projects.*
+*.strings.*
