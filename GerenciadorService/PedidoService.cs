@@ -127,5 +127,80 @@ namespace GerenciadorService
                 throw new Exception("Erro ao criar o pedido: " + ex.Message);
             }
         }
+
+        public async Task UpdateAsync(Guid id, PedidoInput request)
+        {
+            try
+            {
+                if (id == Guid.Empty)
+                    throw new ArgumentException("ID do pedido inválido");
+
+                var pedido = await _repPedido.GetByIdAsync(id);
+                if (pedido == null)
+                    throw new KeyNotFoundException("Pedido não encontrado");
+
+                pedido.DataRealizada = request.DataRealizada;
+                pedido.CompradorId = request.CompradorId;
+
+                await _repPedido.UpdateAsync(pedido);
+
+                if (request.Itens != null)
+                {
+                    var itensAtuais = await _repItem.GetByPedidoAsync(id);
+
+                    // Excluir itens que não vieram mais
+                    var idsRequest = request.Itens.Select(i => i.CarneId).ToHashSet();
+                    foreach (var item in itensAtuais)
+                    {
+                        if (!idsRequest.Contains(item.CarneId))
+                            await _repItem.DeleteAsync(item.Id);
+                    }
+
+                    // Atualizar ou criar novos
+                    foreach (var itemInput in request.Itens)
+                    {
+                        var existente = itensAtuais.FirstOrDefault(x => x.CarneId == itemInput.CarneId);
+                        if (existente != null)
+                        {
+                            existente.Preco = itemInput.Preco;
+                            existente.Moeda = (IMoeda)itemInput.Moeda;
+                            await _repItem.UpdateAsync(existente);
+                        }
+                        else
+                        {
+                            var novoItem = new ItemPedido
+                            {
+                                Id = Guid.NewGuid(),
+                                DataDeCriacao = DateTime.Now,
+                                PedidoId = id,
+                                CarneId = itemInput.CarneId,
+                                Preco = itemInput.Preco,
+                                Moeda = (IMoeda)itemInput.Moeda
+                            };
+                            await _repItem.CreateAsync(novoItem);
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Erro ao atualizar o pedido: " + ex.Message);
+            }
+        }
+
+        public async Task DeleteAsync(Guid id)
+        {
+            try
+            {
+                if (id == Guid.Empty)
+                    throw new ArgumentException("ID do pedido inválido");
+
+                await _repPedido.DeleteAsync(id);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Erro ao excluir o pedido: " + ex.Message);
+            }
+        }
     }
 }
