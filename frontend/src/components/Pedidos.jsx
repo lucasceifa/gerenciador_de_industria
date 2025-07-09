@@ -36,6 +36,15 @@ export default function Pedidos() {
 
   const initialItemState = { carneId: '', preco: '', moeda: 'BRL' };
   const [newItem, setNewItem] = useState(initialItemState);
+  const [errors, setErrors] = useState({
+    dataRealizada: false,
+    compradorId: false,
+    itens: false
+  });
+  const [itemErrors, setItemErrors] = useState({
+    carneId: false,
+    preco: false
+  });
 
   useEffect(() => {
     fetchInitialData();
@@ -133,7 +142,14 @@ export default function Pedidos() {
   };
 
   const handleAddItem = () => {
-    if (!newItem.carneId || !newItem.preco || parseFloat(newItem.preco) <= 0) {
+    const newErrors = {
+      carneId: !newItem.carneId,
+      preco: !newItem.preco || parseFloat(newItem.preco) <= 0
+    };
+
+    setItemErrors(newErrors);
+
+    if (newErrors.carneId || newErrors.preco) {
       showToastMessage('Selecione uma carne e um preço válido.', 'failure');
       return;
     }
@@ -152,12 +168,16 @@ export default function Pedidos() {
   };
 
   const handleSave = async () => {
-    if (
-      !currentPedido.dataRealizada ||
-      !currentPedido.compradorId ||
-      currentPedido.itens.length === 0
-    ) {
-      showToastMessage('Data, comprador e ao menos um item são obrigatórios.', 'failure');
+    const newErrors = {
+      dataRealizada: !currentPedido.dataRealizada,
+      compradorId: !currentPedido.compradorId,
+      itens: currentPedido.itens.length === 0
+    };
+
+    setErrors(newErrors);
+
+    if (Object.values(newErrors).some(e => e)) {
+      showToastMessage('Preencha todos os campos obrigatórios e adicione ao menos um item.', 'failure');
       return;
     }
 
@@ -252,26 +272,35 @@ export default function Pedidos() {
         <ModalHeader>{currentPedido?.id ? 'Editar Pedido' : 'Novo Pedido'}</ModalHeader>
         <ModalBody>
           <div className="space-y-4">
-            <div>
-              <label className="block mb-1 text-sm font-medium text-gray-900 dark:text-gray-300">Data do Pedido</label>
+            <div className="space-y-1">
+              <label className="block mb-1 text-sm font-medium text-gray-900 dark:text-gray-300">
+                Data do Pedido
+              </label>
               <input
                 type="date"
                 value={currentPedido?.dataRealizada || ''}
-                onChange={(e) =>
-                  setCurrentPedido({ ...currentPedido, dataRealizada: e.target.value })
-                }
-                className="w-full rounded border border-gray-300 p-2"
+                onChange={(e) => {
+                  setCurrentPedido({ ...currentPedido, dataRealizada: e.target.value });
+                  setErrors(prev => ({ ...prev, dataRealizada: false }));
+                }}
+                className={`w-full rounded border p-2 ${errors.dataRealizada ? 'border-red-500' : 'border-gray-300'}`}
               />
+              {errors.dataRealizada && (
+                <p className="text-sm text-red-500">A data é obrigatória.</p>
+              )}
             </div>
 
-            <div>
-              <label className="block mb-1 text-sm font-medium text-gray-900 dark:text-gray-300">Comprador</label>
+            <div className="space-y-1">
+              <label className="block mb-1 text-sm font-medium text-gray-900 dark:text-gray-300">
+                Comprador
+              </label>
               <select
                 value={currentPedido?.compradorId || ''}
-                onChange={(e) =>
-                  setCurrentPedido({ ...currentPedido, compradorId: e.target.value })
-                }
-                className="w-full rounded border border-gray-300 p-2"
+                onChange={(e) => {
+                  setCurrentPedido({ ...currentPedido, compradorId: e.target.value });
+                  setErrors(prev => ({ ...prev, compradorId: false }));
+                }}
+                className={`w-full rounded border p-2 ${errors.compradorId ? 'border-red-500' : 'border-gray-300'}`}
               >
                 <option value="">Selecione um comprador</option>
                 {compradores.map((comprador) => (
@@ -280,15 +309,25 @@ export default function Pedidos() {
                   </option>
                 ))}
               </select>
+              {errors.compradorId && (
+                <p className="text-sm text-red-500">O comprador é obrigatório.</p>
+              )}
             </div>
 
             <div className="border-t border-gray-200 pt-4">
               <h3 className="text-md font-semibold mb-2 dark:text-white">Itens do Pedido</h3>
 
+              {errors.itens && !(currentPedido?.itens?.length > 0) && (
+                <p className="text-sm text-red-500 mb-2">Adicione ao menos um item ao pedido.</p>
+              )}
+
               {currentPedido?.itens?.length > 0 && (
                 <ul className="space-y-2 mb-4">
                   {currentPedido.itens.map((item, index) => (
-                    <li key={index} className="flex items-center justify-between bg-gray-50 dark:bg-gray-600 px-5 py-2 rounded dark:text-white">
+                    <li
+                      key={index}
+                      className="flex items-center justify-between bg-gray-50 dark:bg-gray-600 px-5 py-2 rounded dark:text-white"
+                    >
                       <span>
                         {carnes.find(c => c.id === item.carneId)?.nome || 'N/A'} -{' '}
                         {item.preco.toLocaleString('pt-BR', {
@@ -342,6 +381,12 @@ export default function Pedidos() {
                   <option value="EUR">Euro</option>
                 </select>
               </div>
+              {itemErrors.carneId && (
+                <p className="text-xs text-red-500 mt-2">Selecione uma carne.</p>
+              )}
+              {itemErrors.preco && (
+                <p className="text-xs text-red-500 mt-2">Informe um preço maior que zero.</p>
+              )}
 
               <div className="mt-3">
                 <Button size="sm" color="blue" onClick={handleAddItem}>

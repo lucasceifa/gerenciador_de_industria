@@ -34,6 +34,11 @@ export default function Carnes() {
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [currentCarne, setCurrentCarne] = useState(null);
   const [toast, setToast] = useState({ show: false, message: '', type: 'success' });
+  const [errors, setErrors] = useState({
+    nome: false,
+    descricao: false,
+    tipo: false
+  });
 
   const fetchCarnes = async () => {
     setLoading(true);
@@ -54,7 +59,7 @@ export default function Carnes() {
   };
 
   const handleNewCarne = () => {
-    setCurrentCarne({ descricao: '', origem: 0 });
+    setCurrentCarne({ descricao: '', tipo: 0 });
     setShowFormModal(true);
   };
 
@@ -69,8 +74,17 @@ export default function Carnes() {
   };
 
   const handleSave = async () => {
-    if (!currentCarne.descricao) {
-      showToastMessage('A descrição da carne é obrigatória.', 'failure');
+    const newErrors = {
+      nome: !currentCarne.nome || currentCarne.nome.trim() === '',
+      descricao: !currentCarne.descricao || currentCarne.descricao.trim() === '',
+      tipo: currentCarne.tipo === undefined
+    };
+    console.log(currentCarne)
+
+    setErrors(newErrors);
+
+    if (newErrors.nome || newErrors.descricao || newErrors.tipo) {
+      showToastMessage('Preencha todos os campos obrigatórios.', 'failure');
       return;
     }
 
@@ -155,30 +169,51 @@ export default function Carnes() {
               <TextInput
                 id="nome"
                 value={currentCarne?.nome || ''}
-                onChange={(e) => setCurrentCarne({ ...currentCarne, nome: e.target.value })}
+                onChange={(e) => {
+                  setCurrentCarne({ ...currentCarne, nome: e.target.value });
+                  setErrors(prev => ({ ...prev, nome: false }));
+                }}
                 required
+                className={errors.nome ? 'border border-red-500' : ''}
               />
+              {errors.nome && (
+                <p className="text-sm text-red-500">O nome é obrigatório.</p>
+              )}
             </div>
             <div className='space-y-1'>
               <Label htmlFor="descricao" value="Descrição da carne">Descrição da carne</Label>
               <TextInput
                 id="descricao"
                 value={currentCarne?.descricao || ''}
-                onChange={(e) => setCurrentCarne({ ...currentCarne, descricao: e.target.value })}
+                onChange={(e) => {
+                  setCurrentCarne({ ...currentCarne, descricao: e.target.value });
+                  setErrors(prev => ({ ...prev, descricao: false }));
+                }}
                 required
+                className={errors.descricao ? 'border border-red-500' : ''}
               />
+              {errors.descricao && (
+                <p className="text-sm text-red-500">A descrição é obrigatória.</p>
+              )}
             </div>
             <div className='space-y-1'>
               <Label htmlFor="origem" value="Origem da carne">Origem da carne</Label>
               <Select
                 id="origem"
                 value={currentCarne?.tipo || 0}
-                onChange={(e) => setCurrentCarne({ ...currentCarne, tipo: parseInt(e.target.value) })}
+                onChange={(e) => {
+                  setCurrentCarne({ ...currentCarne, tipo: parseInt(e.target.value) });
+                  setErrors(prev => ({ ...prev, tipo: false }));
+                }}
+                className={errors.tipo ? 'border border-red-500' : ''}
               >
                 {origemOptions.map(opt => (
                   <option key={opt.id} value={opt.id}>{opt.nome}</option>
                 ))}
               </Select>
+               {errors.tipo && (
+                  <p className="text-sm text-red-500">A origem da carne é obrigatória.</p>
+                )}
             </div>
           </div>
         </ModalBody>

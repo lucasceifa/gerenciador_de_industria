@@ -27,6 +27,12 @@ export default function Compradores() {
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [currentComprador, setCurrentComprador] = useState(null);
   const [toast, setToast] = useState({ show: false, message: '', type: 'success' });
+  const [errors, setErrors] = useState({
+    nome: false,
+    documento: false,
+    estado: false,
+    cidade: false
+  });
 
   const estados = [
     'AC',
@@ -125,8 +131,17 @@ export default function Compradores() {
   };
 
   const handleSave = async () => {
-    if (!currentComprador.nome || !currentComprador.documento) {
-      showToastMessage('Nome e Documento são obrigatórios.', 'failure');
+    const newErrors = {
+      nome: !currentComprador.nome || currentComprador.nome.trim() === '',
+      documento: !currentComprador.documento || currentComprador.documento.trim() === '',
+      estado: !currentComprador.estado || currentComprador.estado.trim() === '',
+      cidade: !currentComprador.cidade || currentComprador.cidade.trim() === ''
+    };
+
+    setErrors(newErrors);
+
+    if (Object.values(newErrors).some(e => e)) {
+      showToastMessage('Preencha todos os campos obrigatórios.', 'failure');
       return;
     }
 
@@ -145,6 +160,7 @@ export default function Compradores() {
       showToastMessage(errorMessage, 'failure');
     }
   };
+
 
   const confirmDelete = async () => {
     try {
@@ -198,54 +214,84 @@ export default function Compradores() {
         <ModalHeader>{currentComprador?.id ? 'Editar Comprador' : 'Novo Comprador'}</ModalHeader>
         <ModalBody>
           <div className="space-y-2">
-            <div className="space-y-2">
+            <div className="space-y-1">
               <Label htmlFor="nome" value="Nome do Comprador">Nome do Comprador</Label>
               <TextInput
                 id="nome"
                 value={currentComprador?.nome || ''}
-                onChange={(e) => setCurrentComprador({ ...currentComprador, nome: e.target.value })}
+                onChange={(e) => {
+                  setCurrentComprador({ ...currentComprador, nome: e.target.value });
+                  setErrors(prev => ({ ...prev, nome: false }));
+                }}
                 required
+                className={errors.nome ? 'border border-red-500' : ''}
               />
+              {errors.nome && (
+                <p className="text-sm text-red-500">O nome é obrigatório.</p>
+              )}
             </div>
-            <div className="space-y-2">
+
+            <div className="space-y-1">
               <Label htmlFor="documento" value="Documento (CPF/CNPJ)">Documento (CPF/CNPJ)</Label>
               <TextInput
                 id="documento"
                 value={currentComprador?.documento || ''}
-                onChange={(e) => setCurrentComprador({ ...currentComprador, documento: e.target.value })}
+                onChange={(e) => {
+                  setCurrentComprador({ ...currentComprador, documento: e.target.value });
+                  setErrors(prev => ({ ...prev, documento: false }));
+                }}
                 required
+                className={errors.documento ? 'border border-red-500' : ''}
               />
+              {errors.documento && (
+                <p className="text-sm text-red-500">O documento é obrigatório.</p>
+              )}
             </div>
-            <div className="space-y-2">
+
+            <div className="space-y-1">
               <Label htmlFor="estado" value="Estado">Estado</Label>
               <Select
                 id="estado"
-                value={currentComprador?.estado || 'SP'}
-                onChange={(e) =>
+                value={currentComprador?.estado || ''}
+                onChange={(e) => {
                   setCurrentComprador({
                     ...currentComprador,
                     estado: e.target.value,
                     cidade: cidades[e.target.value][0]
-                  })
-                }
+                  });
+                  setErrors(prev => ({ ...prev, estado: false }));
+                }}
+                className={errors.estado ? 'border border-red-500' : ''}
               >
                 {estados.map((uf) => (
                   <option key={uf} value={uf}>{uf}</option>
                 ))}
               </Select>
+              {errors.estado && (
+                <p className="text-sm text-red-500">O estado é obrigatório.</p>
+              )}
             </div>
-            <div className="space-y-2">
+
+            <div className="space-y-1">
               <Label htmlFor="cidade" value="Cidade">Cidade</Label>
               <Select
                 id="cidade"
                 value={currentComprador?.cidade || ''}
-                onChange={(e) => setCurrentComprador({ ...currentComprador, cidade: e.target.value })}
+                onChange={(e) => {
+                  setCurrentComprador({ ...currentComprador, cidade: e.target.value });
+                  setErrors(prev => ({ ...prev, cidade: false }));
+                }}
+                className={errors.cidade ? 'border border-red-500' : ''}
               >
+                <option value="">Selecione a cidade</option>
                 {currentComprador?.estado &&
                   cidades[currentComprador.estado]?.map((cidade) => (
                     <option key={cidade} value={cidade}>{cidade}</option>
                   ))}
               </Select>
+              {errors.cidade && (
+                <p className="text-sm text-red-500">A cidade é obrigatória.</p>
+              )}
             </div>
           </div>
         </ModalBody>
