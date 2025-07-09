@@ -28,12 +28,63 @@ export default function Compradores() {
   const [currentComprador, setCurrentComprador] = useState(null);
   const [toast, setToast] = useState({ show: false, message: '', type: 'success' });
 
-  const estados = ['SP', 'RJ', 'MG', 'BA'];
+  const estados = [
+    'AC',
+    'AL',
+    'AM',
+    'AP',
+    'BA',
+    'CE',
+    'DF',
+    'ES',
+    'GO',
+    'MA',
+    'MG',
+    'MS',
+    'MT',
+    'PA',
+    'PB',
+    'PE',
+    'PI',
+    'PR',
+    'RJ',
+    'RN',
+    'RO',
+    'RR',
+    'RS',
+    'SC',
+    'SE',
+    'SP',
+    'TO' 
+  ];
   const cidades = {
-    SP: ['São Paulo', 'Campinas', 'Santos'],
-    RJ: ['Rio de Janeiro', 'Niterói', 'Petrópolis'],
+    AC: ['Rio Branco', 'Cruzeiro do Sul', 'Sena Madureira'],
+    AL: ['Maceió', 'Arapiraca', 'Palmeira dos Índios'],
+    AM: ['Manaus', 'Parintins', 'Itacoatiara'],
+    AP: ['Macapá', 'Santana', 'Oiapoque'],
+    BA: ['Salvador', 'Feira de Santana', 'Vitória da Conquista'],
+    CE: ['Fortaleza', 'Juazeiro do Norte', 'Sobral'],
+    DF: ['Brasília'],
+    ES: ['Vitória', 'Vila Velha', 'Serra'],
+    GO: ['Goiânia', 'Aparecida de Goiânia', 'Anápolis'],
+    MA: ['São Luís', 'Imperatriz', 'Caxias'],
     MG: ['Belo Horizonte', 'Uberlândia', 'Juiz de Fora'],
-    BA: ['Salvador', 'Feira de Santana', 'Vitória da Conquista']
+    MS: ['Campo Grande', 'Dourados', 'Três Lagoas'],
+    MT: ['Cuiabá', 'Várzea Grande', 'Rondonópolis'],
+    PA: ['Belém', 'Ananindeua', 'Santarém'],
+    PB: ['João Pessoa', 'Campina Grande', 'Patos'],
+    PE: ['Recife', 'Jaboatão dos Guararapes', 'Olinda'],
+    PI: ['Teresina', 'Parnaíba', 'Picos'],
+    PR: ['Curitiba', 'Londrina', 'Maringá'],
+    RJ: ['Rio de Janeiro', 'Niterói', 'Petrópolis'],
+    RN: ['Natal', 'Mossoró', 'Parnamirim'],
+    RO: ['Porto Velho', 'Ji-Paraná', 'Ariquemes'],
+    RR: ['Boa Vista', 'Rorainópolis', 'Caracaraí'],
+    RS: ['Porto Alegre', 'Caxias do Sul', 'Pelotas'],
+    SC: ['Florianópolis', 'Joinville', 'Blumenau'],
+    SE: ['Aracaju', 'Nossa Senhora do Socorro', 'Lagarto'],
+    SP: ['São Paulo', 'Campinas', 'Santos'],
+    TO: ['Palmas', 'Araguaína', 'Gurupi']
   };
 
   useEffect(() => {
@@ -55,7 +106,7 @@ export default function Compradores() {
 
   const showToastMessage = (message, type = 'success') => {
     setToast({ show: true, message, type });
-    setTimeout(() => setToast({ show: false, message: '', type: 'success' }), 3000);
+    setTimeout(() => setToast({ show: false, message: '', type: 'success' }), 6000);
   };
 
   const handleNewComprador = () => {
@@ -104,13 +155,14 @@ export default function Compradores() {
     } catch (error) {
       const errorMessage = error.response?.data?.message || 'Erro ao excluir. Verifique se não há pedidos associados.';
       showToastMessage(errorMessage, 'failure');
+      setShowDeleteModal(false);
     }
   };
 
   return (
     <div className="p-4">
       <div className="flex justify-between items-center mb-4">
-        <h1 className="text-2xl font-bold">Gerenciamento de Compradores</h1>
+        <h1 className="text-2xl font-bold dark:text-white">Gerenciamento de Compradores</h1>
         <Button onClick={handleNewComprador}>Novo Comprador</Button>
       </div>
 
@@ -119,20 +171,22 @@ export default function Compradores() {
       ) : (
         <Table hoverable>
           <TableHead>
-            <TableHeadCell>ID</TableHeadCell>
             <TableHeadCell>Nome</TableHeadCell>
             <TableHeadCell>Documento</TableHeadCell>
+            <TableHeadCell>Cidade</TableHeadCell>
+            <TableHeadCell>Estado</TableHeadCell>
             <TableHeadCell>Ações</TableHeadCell>
           </TableHead>
           <TableBody className="divide-y">
             {compradores.map((comprador) => (
-              <TableRow key={comprador.id}>
-                <TableCell>{comprador.id}</TableCell>
+              <TableRow key={comprador.id} className="bg-white dark:border-gray-700 dark:bg-gray-800">
                 <TableCell>{comprador.nome}</TableCell>
                 <TableCell>{comprador.documento}</TableCell>
+                <TableCell>{comprador.cidade}</TableCell>
+                <TableCell>{comprador.estado}</TableCell>
                 <TableCell className="flex gap-2">
                   <Button size="sm" color="blue" onClick={() => handleEdit(comprador)}>Editar</Button>
-                  <Button size="sm" color="failure" onClick={() => handleDelete(comprador)}>Excluir</Button>
+                  <Button size="sm" color="red" onClick={() => handleDelete(comprador)}>Excluir</Button>
                 </TableCell>
               </TableRow>
             ))}
@@ -143,9 +197,9 @@ export default function Compradores() {
       <Modal show={showFormModal} onClose={() => setShowFormModal(false)}>
         <ModalHeader>{currentComprador?.id ? 'Editar Comprador' : 'Novo Comprador'}</ModalHeader>
         <ModalBody>
-          <div className="space-y-4">
-            <div>
-              <Label htmlFor="nome" value="Nome do Comprador" />
+          <div className="space-y-2">
+            <div className="space-y-2">
+              <Label htmlFor="nome" value="Nome do Comprador">Nome do Comprador</Label>
               <TextInput
                 id="nome"
                 value={currentComprador?.nome || ''}
@@ -153,8 +207,8 @@ export default function Compradores() {
                 required
               />
             </div>
-            <div>
-              <Label htmlFor="documento" value="Documento (CPF/CNPJ)" />
+            <div className="space-y-2">
+              <Label htmlFor="documento" value="Documento (CPF/CNPJ)">Documento (CPF/CNPJ)</Label>
               <TextInput
                 id="documento"
                 value={currentComprador?.documento || ''}
@@ -162,8 +216,8 @@ export default function Compradores() {
                 required
               />
             </div>
-            <div>
-              <Label htmlFor="estado" value="Estado" />
+            <div className="space-y-2">
+              <Label htmlFor="estado" value="Estado">Estado</Label>
               <Select
                 id="estado"
                 value={currentComprador?.estado || 'SP'}
@@ -180,15 +234,15 @@ export default function Compradores() {
                 ))}
               </Select>
             </div>
-            <div>
-              <Label htmlFor="cidade" value="Cidade" />
+            <div className="space-y-2">
+              <Label htmlFor="cidade" value="Cidade">Cidade</Label>
               <Select
                 id="cidade"
                 value={currentComprador?.cidade || ''}
                 onChange={(e) => setCurrentComprador({ ...currentComprador, cidade: e.target.value })}
               >
                 {currentComprador?.estado &&
-                  cidades[currentComprador.estado].map((cidade) => (
+                  cidades[currentComprador.estado]?.map((cidade) => (
                     <option key={cidade} value={cidade}>{cidade}</option>
                   ))}
               </Select>
@@ -210,7 +264,7 @@ export default function Compradores() {
               Tem certeza que deseja excluir o comprador "{currentComprador?.nome}"?
             </h3>
             <div className="flex justify-center gap-4">
-              <Button color="failure" onClick={confirmDelete}>Sim, tenho certeza</Button>
+              <Button color="red" onClick={confirmDelete}>Sim, tenho certeza</Button>
               <Button color="gray" onClick={() => setShowDeleteModal(false)}>Não, cancelar</Button>
             </div>
           </div>

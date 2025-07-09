@@ -12,9 +12,6 @@ import {
   ModalHeader,
   ModalBody,
   ModalFooter,
-  Select,
-  TextInput,
-  Label,
   Toast,
   Spinner
 } from 'flowbite-react';
@@ -37,7 +34,7 @@ export default function Pedidos() {
 
   const [toast, setToast] = useState({ show: false, message: '', type: 'success' });
 
-  const initialItemState = { carneId: '', precoUnitario: '', moeda: 'BRL' };
+  const initialItemState = { carneId: '', preco: '', moeda: 'BRL' };
   const [newItem, setNewItem] = useState(initialItemState);
 
   useEffect(() => {
@@ -47,13 +44,20 @@ export default function Pedidos() {
   const fetchInitialData = async () => {
     setLoading(true);
     try {
-      const [pedidosRes, carnesRes, compradoresRes, ratesRes] = await Promise.all([
-        PedidoService.getAll(),
+      const response = await PedidoService.getAll();
+      const pedidosConvertidos = response.data.map(pedido => ({
+        ...pedido,
+        itens: pedido.itens.map(item => ({
+          ...item,
+          moeda: moedaEnumToISO[item.moeda] || 'BRL'
+        }))
+      }));
+      const [carnesRes, compradoresRes, ratesRes] = await Promise.all([
         CarneService.getAll(),
         CompradorService.getAll(),
         CurrencyService.getRates()
       ]);
-      setPedidos(pedidosRes.data);
+      setPedidos(pedidosConvertidos);
       setCarnes(carnesRes.data);
       setCompradores(compradoresRes.data);
 
@@ -76,7 +80,14 @@ export default function Pedidos() {
     setLoading(true);
     try {
       const response = await PedidoService.getAll();
-      setPedidos(response.data);
+      const pedidosConvertidos = response.data.map(pedido => ({
+        ...pedido,
+        itens: pedido.itens.map(item => ({
+          ...item,
+          moeda: moedaEnumToISO[item.moeda] || 'BRL'
+        }))
+      }));
+      setPedidos(pedidosConvertidos);
     } catch (error) {
       showToastMessage('Erro ao buscar pedidos.', 'failure');
       console.log(error);
@@ -87,20 +98,20 @@ export default function Pedidos() {
 
   const showToastMessage = (message, type = 'success') => {
     setToast({ show: true, message, type });
-    setTimeout(() => setToast({ show: false, message: '', type: 'success' }), 3000);
+    setTimeout(() => setToast({ show: false, message: '', type: 'success' }), 6000);
   };
 
   const calculateTotalBRL = (itens) => {
     if (!itens || !currencyRates.USD) return 0;
     return itens.reduce((total, item) => {
       const rate = currencyRates[item.moeda] || 1;
-      return total + (item.precoUnitario * rate);
+      return total + (item.preco * rate);
     }, 0);
   };
 
   const handleNewPedido = () => {
     setCurrentPedido({
-      dataPedido: new Date().toISOString().split('T')[0],
+      dataRealizada: new Date().toISOString().split('T')[0],
       compradorId: '',
       itens: []
     });
@@ -110,7 +121,7 @@ export default function Pedidos() {
   const handleEdit = (pedido) => {
     const formattedPedido = {
       ...pedido,
-      dataPedido: new Date(pedido.dataPedido).toISOString().split('T')[0]
+      dataRealizada: new Date(pedido.dataRealizada).toISOString().split('T')[0]
     };
     setCurrentPedido(formattedPedido);
     setShowFormModal(true);
@@ -122,13 +133,13 @@ export default function Pedidos() {
   };
 
   const handleAddItem = () => {
-    if (!newItem.carneId || !newItem.precoUnitario || parseFloat(newItem.precoUnitario) <= 0) {
+    if (!newItem.carneId || !newItem.preco || parseFloat(newItem.preco) <= 0) {
       showToastMessage('Selecione uma carne e um preço válido.', 'failure');
       return;
     }
     setCurrentPedido(prev => ({
       ...prev,
-      itens: [...prev.itens, { ...newItem, precoUnitario: parseFloat(newItem.precoUnitario) }]
+      itens: [...prev.itens, { ...newItem, preco: parseFloat(newItem.preco) }]
     }));
     setNewItem(initialItemState);
   };
@@ -141,16 +152,30 @@ export default function Pedidos() {
   };
 
   const handleSave = async () => {
-    if (!currentPedido.dataPedido || !currentPedido.compradorId || currentPedido.itens.length === 0) {
+    if (
+      !currentPedido.dataRealizada ||
+      !currentPedido.compradorId ||
+      currentPedido.itens.length === 0
+    ) {
       showToastMessage('Data, comprador e ao menos um item são obrigatórios.', 'failure');
       return;
     }
+
+    const pedidoParaSalvar = {
+      ...currentPedido,
+      dataRealizada: new Date(currentPedido.dataRealizada).toISOString(),
+      itens: currentPedido.itens.map(item => ({
+        ...item,
+        moeda: moedaISOToEnum[item.moeda] || 0
+      }))
+    };
+
     try {
       if (currentPedido.id) {
-        await PedidoService.update(currentPedido.id, currentPedido);
+        await PedidoService.update(currentPedido.id, pedidoParaSalvar);
         showToastMessage('Pedido atualizado com sucesso!');
       } else {
-        await PedidoService.create(currentPedido);
+        await PedidoService.create(pedidoParaSalvar);
         showToastMessage('Pedido criado com sucesso!');
       }
       setShowFormModal(false);
@@ -160,6 +185,7 @@ export default function Pedidos() {
       console.log(error);
     }
   };
+
 
   const confirmDelete = async () => {
     try {
@@ -173,13 +199,24 @@ export default function Pedidos() {
     }
   };
 
+  const moedaEnumToISO = {
+    0: 'BRL',
+    1: 'USD',
+    2: 'EUR'
+  };
+
+  const moedaISOToEnum = {
+    BRL: 0,
+    USD: 1,
+    EUR: 2
+  };
+
   const getCompradorNome = (id) => compradores.find(c => c.id === id)?.nome || 'N/A';
-  const getCarneDescricao = (id) => carnes.find(c => c.id === id)?.descricao || 'N/A';
 
   return (
     <div className="p-4">
       <div className="flex justify-between items-center mb-4">
-        <h1 className="text-2xl font-bold">Gerenciamento de Pedidos</h1>
+        <h1 className="text-2xl font-bold dark:text-white">Gerenciamento de Pedidos</h1>
         <Button onClick={handleNewPedido}>Novo Pedido</Button>
       </div>
 
@@ -195,15 +232,15 @@ export default function Pedidos() {
             <TableHeadCell>Ações</TableHeadCell>
           </TableHead>
           <TableBody className="divide-y">
-            {pedidos.map((pedido) => (
-              <TableRow key={pedido.id}>
+            {pedidos?.map((pedido) => (
+              <TableRow key={pedido.id} className="bg-white dark:border-gray-700 dark:bg-gray-800">
                 <TableCell>{pedido.id}</TableCell>
                 <TableCell>{getCompradorNome(pedido.compradorId)}</TableCell>
-                <TableCell>{new Date(pedido.dataPedido).toLocaleDateString()}</TableCell>
+                <TableCell>{new Date(pedido.dataRealizada).toLocaleDateString()}</TableCell>
                 <TableCell>{calculateTotalBRL(pedido.itens).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}</TableCell>
                 <TableCell className="flex gap-2">
                   <Button size="sm" color="blue" onClick={() => handleEdit(pedido)}>Editar</Button>
-                  <Button size="sm" color="failure" onClick={() => handleDelete(pedido)}>Excluir</Button>
+                  <Button size="sm" color="red" onClick={() => handleDelete(pedido)}>Excluir</Button>
                 </TableCell>
               </TableRow>
             ))}
@@ -211,11 +248,108 @@ export default function Pedidos() {
         </Table>
       )}
 
-      {/* Modal de Formulário */}
       <Modal show={showFormModal} size="4xl" onClose={() => setShowFormModal(false)}>
         <ModalHeader>{currentPedido?.id ? 'Editar Pedido' : 'Novo Pedido'}</ModalHeader>
         <ModalBody>
-          {/* Form content aqui */}
+          <div className="space-y-4">
+            <div>
+              <label className="block mb-1 text-sm font-medium text-gray-900 dark:text-gray-300">Data do Pedido</label>
+              <input
+                type="date"
+                value={currentPedido?.dataRealizada || ''}
+                onChange={(e) =>
+                  setCurrentPedido({ ...currentPedido, dataRealizada: e.target.value })
+                }
+                className="w-full rounded border border-gray-300 p-2"
+              />
+            </div>
+
+            <div>
+              <label className="block mb-1 text-sm font-medium text-gray-900 dark:text-gray-300">Comprador</label>
+              <select
+                value={currentPedido?.compradorId || ''}
+                onChange={(e) =>
+                  setCurrentPedido({ ...currentPedido, compradorId: e.target.value })
+                }
+                className="w-full rounded border border-gray-300 p-2"
+              >
+                <option value="">Selecione um comprador</option>
+                {compradores.map((comprador) => (
+                  <option key={comprador.id} value={comprador.id}>
+                    {comprador.nome}
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            <div className="border-t border-gray-200 pt-4">
+              <h3 className="text-md font-semibold mb-2 dark:text-white">Itens do Pedido</h3>
+
+              {currentPedido?.itens?.length > 0 && (
+                <ul className="space-y-2 mb-4">
+                  {currentPedido.itens.map((item, index) => (
+                    <li key={index} className="flex items-center justify-between bg-gray-50 dark:bg-gray-600 px-5 py-2 rounded dark:text-white">
+                      <span>
+                        {carnes.find(c => c.id === item.carneId)?.nome || 'N/A'} -{' '}
+                        {item.preco.toLocaleString('pt-BR', {
+                          style: 'currency',
+                          currency: item.moeda
+                        })} ({item.moeda})
+                      </span>
+                      <Button size="xs" color="red" onClick={() => handleRemoveItem(index)}>
+                        Remover
+                      </Button>
+                    </li>
+                  ))}
+                </ul>
+              )}
+
+              <div className="grid grid-cols-3 gap-2">
+                <select
+                  value={newItem.carneId}
+                  onChange={(e) =>
+                    setNewItem({ ...newItem, carneId: e.target.value })
+                  }
+                  className="rounded border border-gray-300 p-2"
+                >
+                  <option value="">Selecione a carne</option>
+                  {carnes.map((carne) => (
+                    <option key={carne.id} value={carne.id}>
+                      {carne.nome}
+                    </option>
+                  ))}
+                </select>
+
+                <input
+                  type="number"
+                  placeholder="Preço"
+                  value={newItem.preco}
+                  onChange={(e) =>
+                    setNewItem({ ...newItem, preco: e.target.value })
+                  }
+                  className="rounded border border-gray-300 p-2"
+                />
+
+                <select
+                  value={newItem.moeda}
+                  onChange={(e) =>
+                    setNewItem({ ...newItem, moeda: e.target.value })
+                  }
+                  className="rounded border border-gray-300 p-2"
+                >
+                  <option value="BRL">Real</option>
+                  <option value="USD">Dólar</option>
+                  <option value="EUR">Euro</option>
+                </select>
+              </div>
+
+              <div className="mt-3">
+                <Button size="sm" color="blue" onClick={handleAddItem}>
+                  Adicionar Item
+                </Button>
+              </div>
+            </div>
+          </div>
         </ModalBody>
         <ModalFooter>
           <Button onClick={handleSave}>Salvar Pedido</Button>
@@ -223,24 +357,22 @@ export default function Pedidos() {
         </ModalFooter>
       </Modal>
 
-      {/* Modal de Exclusão */}
       <Modal show={showDeleteModal} size="md" popup onClose={() => setShowDeleteModal(false)}>
         <ModalHeader />
         <ModalBody>
-          <div className="text-center">
+          {currentPedido && <div className="text-center">
             <HiExclamation className="mx-auto mb-4 h-14 w-14 text-gray-400 dark:text-gray-200" />
             <h3 className="mb-5 text-lg font-normal text-gray-500 dark:text-gray-400">
-              Tem certeza que deseja excluir o pedido #{currentPedido?.id}?
+              Tem certeza que deseja excluir o pedido do comprador(a) <strong>{getCompradorNome(currentPedido.compradorId)}</strong> de {calculateTotalBRL(currentPedido.itens).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })} realizado no dia {new Date(currentPedido.dataRealizada).toLocaleDateString()}?
             </h3>
             <div className="flex justify-center gap-4">
-              <Button color="failure" onClick={confirmDelete}>Sim, tenho certeza</Button>
+              <Button color="red" onClick={confirmDelete}>Sim, tenho certeza</Button>
               <Button color="gray" onClick={() => setShowDeleteModal(false)}>Não, cancelar</Button>
             </div>
-          </div>
+          </div>}
         </ModalBody>
       </Modal>
 
-      {/* Toast */}
       {toast.show && (
         <Toast className="fixed top-5 right-5 z-50">
           <div className={`inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-lg ${toast.type === 'success' ? 'bg-green-100 text-green-500' : 'bg-red-100 text-red-500'}`}>

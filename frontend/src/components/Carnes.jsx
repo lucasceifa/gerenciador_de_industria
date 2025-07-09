@@ -50,7 +50,7 @@ export default function Carnes() {
 
   const showToastMessage = (message, type = 'success') => {
     setToast({ show: true, message, type });
-    setTimeout(() => setToast({ show: false, message: '', type: 'success' }), 3000);
+    setTimeout(() => setToast({ show: false, message: '', type: 'success' }), 6000);
   };
 
   const handleNewCarne = () => {
@@ -99,6 +99,7 @@ export default function Carnes() {
     } catch (error) {
       const errorMessage = error.response?.data?.message || 'Erro ao excluir. Verifique se não há pedidos associados.';
       showToastMessage(errorMessage, 'failure');
+      setShowDeleteModal(false);
     }
   };
 
@@ -111,7 +112,7 @@ export default function Carnes() {
   return (
     <div className="p-4">
       <div className="flex justify-between items-center mb-4">
-        <h1 className="text-2xl font-bold">Gerenciamento de Carnes</h1>
+        <h1 className="text-2xl font-bold dark:text-white">Gerenciamento de Carnes</h1>
         <Button onClick={handleNewCarne}>Nova Carne</Button>
       </div>
 
@@ -122,7 +123,8 @@ export default function Carnes() {
       ) : (
         <Table hoverable>
           <TableHead>
-            <TableHeadCell>ID</TableHeadCell>
+            <TableHeadCell>Id</TableHeadCell>
+            <TableHeadCell>Nome</TableHeadCell>
             <TableHeadCell>Descrição</TableHeadCell>
             <TableHeadCell>Origem</TableHeadCell>
             <TableHeadCell>Ações</TableHeadCell>
@@ -131,11 +133,12 @@ export default function Carnes() {
             {carnes.map((carne) => (
               <TableRow key={carne.id} className="bg-white dark:border-gray-700 dark:bg-gray-800">
                 <TableCell>{carne.id}</TableCell>
+                <TableCell>{carne.nome}</TableCell>
                 <TableCell>{carne.descricao}</TableCell>
-                <TableCell>{getOrigemNome(carne.origem)}</TableCell>
+                <TableCell>{getOrigemNome(carne.tipo)}</TableCell>
                 <TableCell className="flex gap-2">
                   <Button size="sm" color="blue" onClick={() => handleEdit(carne)}>Editar</Button>
-                  <Button size="sm" color="failure" onClick={() => handleDelete(carne)}>Excluir</Button>
+                  <Button size="sm" color="red" onClick={() => handleDelete(carne)}>Excluir</Button>
                 </TableCell>
               </TableRow>
             ))}
@@ -146,9 +149,18 @@ export default function Carnes() {
       <Modal show={showFormModal} onClose={() => setShowFormModal(false)}>
         <ModalHeader>{currentCarne?.id ? 'Editar Carne' : 'Nova Carne'}</ModalHeader>
         <ModalBody>
-          <div className="space-y-6">
-            <div>
-              <Label htmlFor="descricao" value="Descrição da Carne" />
+          <div className="space-y-3">
+            <div className='space-y-1'>
+              <Label htmlFor="nome" value="Nome da carne">Nome da carne</Label>
+              <TextInput
+                id="nome"
+                value={currentCarne?.nome || ''}
+                onChange={(e) => setCurrentCarne({ ...currentCarne, nome: e.target.value })}
+                required
+              />
+            </div>
+            <div className='space-y-1'>
+              <Label htmlFor="descricao" value="Descrição da carne">Descrição da carne</Label>
               <TextInput
                 id="descricao"
                 value={currentCarne?.descricao || ''}
@@ -156,12 +168,12 @@ export default function Carnes() {
                 required
               />
             </div>
-            <div>
-              <Label htmlFor="origem" value="Origem da Carne" />
+            <div className='space-y-1'>
+              <Label htmlFor="origem" value="Origem da carne">Origem da carne</Label>
               <Select
                 id="origem"
-                value={currentCarne?.origem || 0}
-                onChange={(e) => setCurrentCarne({ ...currentCarne, origem: parseInt(e.target.value) })}
+                value={currentCarne?.tipo || 0}
+                onChange={(e) => setCurrentCarne({ ...currentCarne, tipo: parseInt(e.target.value) })}
               >
                 {origemOptions.map(opt => (
                   <option key={opt.id} value={opt.id}>{opt.nome}</option>
@@ -171,7 +183,7 @@ export default function Carnes() {
           </div>
         </ModalBody>
         <ModalFooter>
-          <Button onClick={handleSave}>Salvar</Button>
+          <Button onClick={handleSave} color="blue">Salvar</Button>
           <Button color="gray" onClick={() => setShowFormModal(false)}>Cancelar</Button>
         </ModalFooter>
       </Modal>
@@ -185,7 +197,7 @@ export default function Carnes() {
               Tem certeza que deseja excluir a carne "{currentCarne?.descricao}"?
             </h3>
             <div className="flex justify-center gap-4">
-              <Button color="failure" onClick={confirmDelete}>Sim, tenho certeza</Button>
+              <Button color="red" onClick={confirmDelete}>Sim, tenho certeza</Button>
               <Button color="gray" onClick={() => setShowDeleteModal(false)}>Não, cancelar</Button>
             </div>
           </div>

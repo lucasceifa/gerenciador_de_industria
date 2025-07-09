@@ -1,3 +1,8 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+.bg-gray-700:hover {
+  background-color: #4e5a6d !important;;
+  filter: brightness(1.03);
+}

@@ -20,7 +20,7 @@ export default function AppRouter() {
         <Navbar fluid rounded>
           <NavbarBrand as={Link} to="/">
             <span className="self-center whitespace-nowrap text-xl font-semibold dark:text-white">
-              Gestão de Churrasco
+              Gestão de Indústria de Carnes
             </span>
           </NavbarBrand>
           <NavbarToggle />
