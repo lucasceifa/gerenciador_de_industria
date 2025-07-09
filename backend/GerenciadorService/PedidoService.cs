@@ -116,6 +116,7 @@ namespace GerenciadorService
                 {
                     foreach (var item in itens)
                     {
+                        item.PedidoId = pedido.Id;
                         await _repItem.CreateAsync(item);
                     }
                 }
@@ -149,17 +150,17 @@ namespace GerenciadorService
                     var itensAtuais = await _repItem.GetByPedidoAsync(id);
 
                     // Excluir itens que não vieram mais
-                    var idsRequest = request.Itens.Select(i => i.CarneId).ToHashSet();
+                    var idsRequest = request.Itens.Select(i => i.Id).ToHashSet();
                     foreach (var item in itensAtuais)
                     {
-                        if (!idsRequest.Contains(item.CarneId))
+                        if (!idsRequest.Contains(item.Id))
                             await _repItem.DeleteAsync(item.Id);
                     }
 
                     // Atualizar ou criar novos
                     foreach (var itemInput in request.Itens)
                     {
-                        var existente = itensAtuais.FirstOrDefault(x => x.CarneId == itemInput.CarneId);
+                        var existente = itensAtuais.FirstOrDefault(x => x.Id == itemInput.Id);
                         if (existente != null)
                         {
                             existente.Preco = itemInput.Preco;
